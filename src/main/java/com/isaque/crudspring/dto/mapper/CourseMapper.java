@@ -3,6 +3,7 @@ package com.isaque.crudspring.dto.mapper;
 import org.springframework.stereotype.Component;
 
 import com.isaque.crudspring.dto.CourseDTO;
+import com.isaque.crudspring.enums.Category;
 import com.isaque.crudspring.model.Course;
 
 @Component
@@ -12,7 +13,7 @@ public class CourseMapper {
         if(course ==null){
             return null;
         }
-        return new CourseDTO(course.getId(), course.getName(), course.getCategory());
+        return new CourseDTO(course.getId(), course.getName(), course.getCategory().getValue());
     }
 
     public Course toEntity(CourseDTO courseDTO){
@@ -26,7 +27,7 @@ public class CourseMapper {
             course.setId(courseDTO.id());
         }
         course.setName(courseDTO.name());
-        course.setCategory(courseDTO.category());
+        course.setCategory(Category.valueOf(courseDTO.category()));
         course.setStatus("Ativo");
         return course;
     }
