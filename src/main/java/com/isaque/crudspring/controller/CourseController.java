@@ -3,7 +3,6 @@ package com.isaque.crudspring.controller;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,7 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.isaque.crudspring.model.Course;
+import com.isaque.crudspring.dto.CourseDTO;
 import com.isaque.crudspring.service.CourseService;
 
 import jakarta.validation.Valid;
@@ -26,8 +25,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 @Validated
 @RestController
 @RequestMapping("/api/courses")
-public class CourseController {
-    
+public class CourseController {     
 
     private final CourseService courseService;
     
@@ -36,41 +34,35 @@ public class CourseController {
     }
 
     @GetMapping
-    public @ResponseBody List<Course> list() {
+    public @ResponseBody List<CourseDTO> list() {
         return courseService.list();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity <Course> findById(@PathVariable @NotNull @Positive Long id){
-        return courseService.findById(id)
-                .map(rec -> ResponseEntity.ok().body(rec))
-                .orElse(ResponseEntity.notFound().build());
+    public CourseDTO findById(@PathVariable @NotNull @Positive Long id){
+        return courseService.findById(id);
     }
     
     @PostMapping                    //Anotação que substitui @RequestMappaing(method = RequestMethod.POST)
     @ResponseStatus(code = HttpStatus.CREATED )
-    public Course create(@RequestBody @Valid Course course){
-        
+    public CourseDTO create(@RequestBody @Valid @NotNull CourseDTO course){
         return courseService.create(course);
-        
     }
 
 
     @PutMapping(value="/{id}")
     @ResponseStatus(code = HttpStatus.OK)
-    public ResponseEntity <Course> update(@NotNull @PathVariable Long id, @RequestBody @Valid Course course) {
-        
-        return courseService.update(id, course)
-                .map(recordFound -> ResponseEntity.ok().body(recordFound))
-                .orElse(ResponseEntity.notFound().build());
+    public CourseDTO update(@NotNull @PathVariable Long id, 
+            @RequestBody @Valid CourseDTO course) {
+        return courseService.update(id, course);
     }
+
     //Hard Delete - remoção física do Banco de Dados
+    //Soft Delete - Apenas torna o dado inválido para amostras (mantem guardado)
     @DeleteMapping(value="/{id}")
-    public ResponseEntity<Void> delete(@PathVariable @NotNull @Positive Long id){
-        if(courseService.delete(id)){
-            return ResponseEntity.noContent().<Void>build();
-        }
-        return ResponseEntity.notFound().build();
+    @ResponseStatus(code = HttpStatus.NO_CONTENT )
+    public void delete(@PathVariable @NotNull @Positive Long id){
+        courseService.delete(id);
     }
 
     
