@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component;
 
 import com.isaque.crudspring.dto.CourseDTO;
 import com.isaque.crudspring.enums.Category;
+import com.isaque.crudspring.enums.Status;
 import com.isaque.crudspring.model.Course;
 
 @Component
@@ -27,8 +28,19 @@ public class CourseMapper {
             course.setId(courseDTO.id());
         }
         course.setName(courseDTO.name());
-        course.setCategory(Category.valueOf(courseDTO.category()));
-        course.setStatus("Ativo");
+        course.setCategory(convertCategoryValue( courseDTO.category()));
         return course;
+    }
+
+    public Category convertCategoryValue(String value){
+        if(value == null){
+            return null;
+        }
+
+        return switch (value) {
+            case "Back-end" ->  Category.BACK_END;
+            case "Front-end" -> Category.FRONT_END;
+            default -> throw new IllegalArgumentException("Categoria Inválida: "+ value);
+        };
     }
 }
