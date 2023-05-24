@@ -4,7 +4,6 @@ import org.springframework.stereotype.Component;
 
 import com.isaque.crudspring.dto.CourseDTO;
 import com.isaque.crudspring.enums.Category;
-import com.isaque.crudspring.enums.Status;
 import com.isaque.crudspring.model.Course;
 
 @Component

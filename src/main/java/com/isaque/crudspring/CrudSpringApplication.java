@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 import com.isaque.crudspring.enums.Category;
-import com.isaque.crudspring.enums.Status;
 import com.isaque.crudspring.model.Course;
+import com.isaque.crudspring.model.Lesson;
 import com.isaque.crudspring.repository.CourseRepository;
 
 @SpringBootApplication
@@ -25,7 +25,13 @@ public class CrudSpringApplication {
 			Course c = new Course();
 			c.setName("Angular com Spring");
 			c.setCategory(Category.FRONT_END);
-			c.setStatus(Status.ATIVO);
+			
+			Lesson l = new Lesson();
+			l.setName("Introdução");
+			l.setYoutubeUrl("watch?v=1");
+			l.setCourse(c);
+			c.getLessons().add( l );
+
 			courseRepository.save(c);
 		};
 	}

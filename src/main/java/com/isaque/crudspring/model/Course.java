@@ -1,5 +1,8 @@
 package com.isaque.crudspring.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.hibernate.validator.constraints.Length;
@@ -10,12 +13,14 @@ import com.isaque.crudspring.enums.Status;
 import com.isaque.crudspring.enums.converters.CategoryConverter;
 import com.isaque.crudspring.enums.converters.StatusConverter;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -48,4 +53,6 @@ public class Course {
     @Convert(converter = StatusConverter.class)
     private Status status = Status.ATIVO;
 
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "course")   //Saber se deve ser passado para classes filhas Curso removido então é necessário remover as aulas.
+    private List<Lesson> lessons = new ArrayList<>();
 }
